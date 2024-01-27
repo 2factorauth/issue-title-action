@@ -1,6 +1,7 @@
 name: 'Issue title updater'
 description: 'Issue title updater for 2factorauth'
 author: 'Carlgo11'
+
 inputs:
   data:
     description: 'Issue data'
@@ -8,18 +9,15 @@ inputs:
   repository:
     description: 'The full name of the repository'
     required: true
-  owner:
-    description: 'The owner of the repository'
-    required: true
   token:
     description: 'GitHub Token'
     required: true
   issue_number:
     description: 'GitHub Issue number'
     required: true
-  issue_labels:
+  labels:
     description: 'Issue labels'
     required: true
 runs:
   using: 'node20'
-  main: 'index.js'
+  main: 'dist/index.js'

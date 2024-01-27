@@ -4,12 +4,12 @@ const {Octokit} = require('@octokit/core');
 
 async function run() {
   const octokit = new Octokit({
-    auth: core.getInput('token')
+    auth: process.env.GH_TOKEN
   })
   const labels = JSON.parse(core.getInput('labels'))
   let prefix = '';
   for (const label of labels) {
-    switch (label.name) {
+    switch (label['name']) {
       case 'add site':
         prefix = 'Add';
         break;
@@ -18,11 +18,16 @@ async function run() {
         break;
     }
   }
-  const data = JSON.parse(core.getInput('data'))
-  const site_name = data['site-name'].text
-  return await octokit.request('PATCH /repos/{owner}/{repo}/issues/{issue_number}', {
-    owner: core.getInput('owner'),
-    repo: core.getInput('repository'),
+
+  if (prefix === '') {
+    console.log('No matching label. Exiting')
+    return 0;
+  }
+
+  const data = JSON.parse(JSON.parse(core.getInput('data')))
+  const site_name = data['site-name']?.text
+  const repo = decodeURIComponent(core.getInput('repository'))
+  return await octokit.request(`PATCH /repos/${repo}/issues/{issue_number}`, {
     issue_number: core.getInput('issue_number'),
     title: `${prefix} ${site_name}`,
     headers: {
@@ -31,4 +36,7 @@ async function run() {
   })
 }
 
-run().catch(error => core.setFailed(error.message));
+run().catch(error => {
+  console.error(error);
+  core.setFailed(error.message)
+});
