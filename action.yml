@@ -18,6 +18,16 @@ inputs:
   labels:
     description: 'Issue labels'
     required: true
+  similarweb_key:
+    description: 'SimilarWeb API Key'
+    required: false
+  rank_reply:
+    description: 'Comment to send if the SimilarWeb rank is above 200K'
+    default: 'Our guidelines on [new site additions](https://github.com/2factorauth/twofactorauth/blob/master/CONTRIBUTING.md#guidelines) require new entries to have a global rank of 200,000 or less on [Similarweb](https://www.similarweb.com/website/).\nThis requirement is in place because maintaining the lists takes time, and a list of all websites on the internet isn't feasible.\nUnfortunately, as the site you want to add is ranked above 200,000, it doesn't meet our guidelines and thus can't be added. If the site rises in popularity in the future and is ranked below 200,000 on Similarweb, this pull request can be reopened.\nTo prevent any of your future pull requests from being closed, please make sure your contribution adheres to our [CONTRIBUTING.md](https://github.com/2factorauth/twofactorauth/blob/master/CONTRIBUTING.md) and [EXCLUSION.md](https://github.com/2factorauth/twofactorauth/blob/master/EXCLUSION.md) before creating a new pull request. Thank you!'
+  adult_reply:
+    description: 'Comment to send if the website hosts adult content'
+    default: 'Hello,\nthe issue seems to be regarding a website featuring adult content, which is against our [guidelines](https://github.com/2factorauth/twofactorauth/blob/master/CONTRIBUTING.md) and [exclusion policy](https://github.com/2factorauth/twofactorauth/blob/master/EXCLUSION.md).'
+
 runs:
   using: 'node20'
   main: 'dist/index.js'
