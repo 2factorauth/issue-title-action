@@ -81,11 +81,15 @@ async function comment(repo, issue, text) {
  */
 async function checkRating(url) {
   const res = await fetch(url)
+
+  // Silently fail if url is unreachable
+  if(res.status !== 200) return false;
+
   const html = await res.text()
   const parser = new DOMParser()
   const doc = parser.parseFromString(html, 'text/html')
   const ratingMetaTags = doc.querySelectorAll('meta[name="rating"]')
-  if (!ratingMetaTags > 0) {
+  if (ratingMetaTags > 0) {
     const ratings = Array.from(ratingMetaTags).map(tag => tag.getAttribute('content'));
     return ratings.some(rating => ['adult', 'mature', 'RTA-5042-1996-1400-1577-RTA'].includes(rating));
   }
