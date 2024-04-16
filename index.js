@@ -1,5 +1,6 @@
 const core = require('@actions/core');
 const {Octokit} = require('@octokit/core');
+const {JSDOM} = require('jsdom');
 
 async function run() {
   const octokit = new Octokit({
@@ -85,11 +86,13 @@ async function checkRating(url) {
   // Silently fail if url is unreachable
   if(res.status !== 200) return false;
 
-  const html = await res.text()
-  const parser = new DOMParser()
-  const doc = parser.parseFromString(html, 'text/html')
-  const ratingMetaTags = doc.querySelectorAll('meta[name="rating"]')
-  if (ratingMetaTags > 0) {
+  const html = await res.text();
+  const dom = new JSDOM(html);
+  const {document} = dom.window;
+
+  const ratingMetaTags = document.querySelectorAll('meta[name="rating"]');
+
+  if (ratingMetaTags.length > 0) {
     const ratings = Array.from(ratingMetaTags).map(tag => tag.getAttribute('content'));
     return ratings.some(rating => ['adult', 'mature', 'RTA-5042-1996-1400-1577-RTA'].includes(rating));
   }
