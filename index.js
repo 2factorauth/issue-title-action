@@ -27,7 +27,7 @@ async function run() {
   const site_name = data['site-name']?.text
   const repo = decodeURIComponent(core.getInput('repository'))
   const issue = core.getInput('issue_number')
-  const domain = data['site-url']?.text
+  const domain = data['site-url']?.text.replace(/[<>]/g, '');
 
   // Check if adult website
   if (await checkRating(domain)) {
